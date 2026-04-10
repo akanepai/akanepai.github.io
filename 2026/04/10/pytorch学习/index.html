@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="akanepai">
+
+
+
+
+
+<title>pytorch学习 | akanepai&#39;s blog</title>
+
+
+
+    <link rel="icon" href="/bitbug_favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">akanepai&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">akanepai&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">pytorch学习</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">akanepai</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 10, 2026&nbsp;&nbsp;19:40:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/blog1/">blog1</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Pytorch"><a href="#Pytorch" class="headerlink" title="Pytorch"></a>Pytorch</h1><h2 id="小土堆"><a href="#小土堆" class="headerlink" title="小土堆"></a>小土堆</h2><h3 id="pytorch两大法宝"><a href="#pytorch两大法宝" class="headerlink" title="pytorch两大法宝"></a>pytorch两大法宝</h3><ol>
+<li><strong>dir（）</strong>：打开，看见</li>
+<li><strong>help（）</strong>：说明书</li>
+</ol>
+<h2 id="基础函数学习"><a href="#基础函数学习" class="headerlink" title="基础函数学习"></a>基础函数学习</h2><h3 id="tensor"><a href="#tensor" class="headerlink" title="tensor"></a>tensor</h3><ol>
+<li>怎么创建tenser<br><code>x=torch.tensor()</code></li>
+<li>怎么看形状<br><code>print(x.shape)</code></li>
+</ol>
+<h3 id="nn-Linear"><a href="#nn-Linear" class="headerlink" title="nn.Linear"></a>nn.Linear</h3><p><code>import torch.nn as nn</code></p>
+<p><code>layer = nn.Linear(3, 2)</code></p>
+<ul>
+<li>输入 3 个特征</li>
+<li>输出 2 个结果</li>
+</ul>
+<p><code>nn.Linear(a, b)</code> 的作用，就是把每个样本从 <code>a</code> 个特征变成 <code>b</code> 个特征。</p>
+<h3 id="nn-Sequential"><a href="#nn-Sequential" class="headerlink" title="nn.Sequential"></a>nn.Sequential</h3><ul>
+<li><p>这个是把几层按顺序串起来。</p>
+</li>
+<li><p><code>net = nn.Sequential(...)</code>说明我把网络顺序搭好了</p>
+</li>
+</ul>
+<h3 id="net（X）"><a href="#net（X）" class="headerlink" title="net（X）"></a>net（X）</h3><blockquote>
+<p>把输入 <code>X</code> 喂给模型，得到预测结果</p>
+</blockquote>
+<p>这就叫 <strong>前向传播（forward pass）</strong>。</p>
+<ul>
+<li><code>hat</code>预测的</li>
+</ul>
+<hr>
+<h4 id="net有可能是两个东西"><a href="#net有可能是两个东西" class="headerlink" title="net有可能是两个东西"></a>net有可能是两个东西</h4><ol>
+<li><p>net是PyTorch模型</p>
+<p><strong>如果 <code>net</code> 是 <code>nn.Module</code> 模型</strong></p>
+<ul>
+<li>可以调用 <code>net.eval()</code></li>
+<li>可以访问 <code>net.parameters()</code></li>
+</ul>
+</li>
+<li><p>net是普通函数</p>
+</li>
+</ol>
+<h3 id="loss（y-hat-y"><a href="#loss（y-hat-y" class="headerlink" title="loss（y_hat,y)"></a><code>loss（y_hat,y)</code></h3><p>损失函数就是用来衡量：</p>
+<blockquote>
+<p>预测得有多差</p>
+</blockquote>
+<h3 id="模型训练三件套"><a href="#模型训练三件套" class="headerlink" title="模型训练三件套"></a>模型训练三件套</h3><p>这三个你一定要懂：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">optimizer.zero_grad()</span><br><span class="line">l.backward()</span><br><span class="line">optimizer.step()</span><br></pre></td></tr></table></figure>
+
+<p>这三个基本是深度学习训练的灵魂。</p>
+<ol>
+<li><p><code>optimizer.zero_grad()</code></p>
+<blockquote>
+<p>把旧的梯度清空</p>
+</blockquote>
+<p>为什么要清空？<br>因为 PyTorch 默认会把梯度<strong>累加</strong>，不清掉的话，上一次的梯度会影响这一次。</p>
+<p>你现在先记成人话：</p>
+<blockquote>
+<p>每轮更新前，先把旧草稿擦掉</p>
+</blockquote>
+</li>
+<li><p><code>l.backward()</code></p>
+<blockquote>
+<p>反向传播，计算梯度</p>
+</blockquote>
+</li>
+<li><p><code>optimizer.step()</code></p>
+<blockquote>
+<p>根据刚才算出来的梯度，真的去更新参数</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="DataLoader-是什么"><a href="#DataLoader-是什么" class="headerlink" title="DataLoader 是什么"></a><code>DataLoader</code> 是什么</h3><p>你可以理解成：</p>
+<blockquote>
+<p>帮你把数据一小批一小批地送进模型</p>
+</blockquote>
+<p>比如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> TensorDataset, DataLoader</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">X = torch.tensor([[<span class="number">1.0</span>], [<span class="number">2.0</span>], [<span class="number">3.0</span>], [<span class="number">4.0</span>]])</span><br><span class="line">y = torch.tensor([[<span class="number">2.0</span>], [<span class="number">4.0</span>], [<span class="number">6.0</span>], [<span class="number">8.0</span>]])</span><br><span class="line"></span><br><span class="line">dataset = TensorDataset(X, y)</span><br><span class="line">train_iter = DataLoader(dataset, batch_size=<span class="number">2</span>, shuffle=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这里的意思是：</p>
+<ul>
+<li><code>TensorDataset(X, y)</code>：把输入和标签配对</li>
+<li><code>DataLoader(...)</code>：每次拿 2 个样本出来训练</li>
+<li><code>shuffle=True</code>：每轮打乱顺序</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> X, y <span class="keyword">in</span> train_iter:</span><br></pre></td></tr></table></figure>
+
+<p>你看到它就自动翻译成：</p>
+<blockquote>
+<p>“开始一批一批读训练数据了。”</p>
+</blockquote>
+<h3 id="torch-Size-1-28-28-这啥意思"><a href="#torch-Size-1-28-28-这啥意思" class="headerlink" title="  torch.Size([1, 28, 28])这啥意思"></a><code>  torch.Size([1, 28, 28])</code>这啥意思</h3><h4 id="为什么第一个是-1？"><a href="#为什么第一个是-1？" class="headerlink" title="为什么第一个是 1？"></a>为什么第一个是 1？</h4><p>因为 <strong>FashionMNIST 是灰度图</strong>，不是彩色图。</p>
+<h5 id="灰度图"><a href="#灰度图" class="headerlink" title="灰度图"></a>灰度图</h5><p>只有一个通道，所以是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[1, 28, 28]</span><br></pre></td></tr></table></figure>
+
+<h5 id="彩色图（比如-RGB）"><a href="#彩色图（比如-RGB）" class="headerlink" title="彩色图（比如 RGB）"></a>彩色图（比如 RGB）</h5><p>会有 3 个通道，所以常见是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[3, 高, 宽]</span><br></pre></td></tr></table></figure>
+
+<h3 id="iter"><a href="#iter" class="headerlink" title="iter"></a>iter</h3><p><code>iter</code> 是 <strong>“把一个东西变成可迭代取值的状态”</strong>。</p>
+<p><code>DataLoader</code> 你可以先把它理解成：</p>
+<blockquote>
+<p><strong>一个“按批次把数据送出来”的工具。</strong> 📦</p>
+</blockquote>
+<p>它本身<strong>不是数据集</strong>，而是帮你从数据集里<strong>一批一批拿数据</strong>。</p>
+<ul>
+<li><code>dataset</code> &#x3D; 数据本体</li>
+<li><code>DataLoader</code> &#x3D; 数据搬运工</li>
+</ul>
+<h3 id="type"><a href="#type" class="headerlink" title=".type"></a>.type</h3><blockquote>
+<p>作用是变换类型（注意：类型和格式reshape不是一个东西）</p>
+</blockquote>
+<h3 id="Accumlator（累加器）"><a href="#Accumlator（累加器）" class="headerlink" title="Accumlator（累加器）"></a>Accumlator（累加器）</h3><blockquote>
+<p>创建一个“累加器”对象，用来累积数</p>
+</blockquote>
+<p>表示里面先有两个位置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[0.0, 0.0]</span><br></pre></td></tr></table></figure>
+
+<p>现在第一批数据来了：</p>
+<ul>
+<li>这一批预测对了 15 个</li>
+<li>这一批总共有 18 个</li>
+</ul>
+<p>就加进去：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">metric.add(15, 18)</span><br></pre></td></tr></table></figure>
+
+<p>里面变成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[15.0, 18.0]</span><br></pre></td></tr></table></figure>
+
+<p>第二批又来了：</p>
+<ul>
+<li>对了 16 个</li>
+<li>一共 18 个</li>
+</ul>
+<p>再加进去：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">metric.add(16, 18)</span><br></pre></td></tr></table></figure>
+
+<h3 id="numel"><a href="#numel" class="headerlink" title="numel()"></a>numel()</h3><blockquote>
+<p>y里面一共又多少元素（数字）</p>
+</blockquote>
+<h3 id="features和labels"><a href="#features和labels" class="headerlink" title="features和labels"></a>features和labels</h3><ul>
+<li><strong>features</strong>&#x3D;输入&#x2F;已知条件&#x2F;题目给你的东西</li>
+<li><strong>labels</strong>&#x3D;输出&#x2F;标准答案，你想让模型学会预测的东西</li>
+</ul>
+<h2 id="范数"><a href="#范数" class="headerlink" title="范数"></a>范数</h2><ol>
+<li><p><strong>L1</strong>：∥w∥1&#x3D;j∑∣wj∣，<strong>套索回归</strong></p>
+<ul>
+<li><strong>特点</strong>：很容易把一些权重直接压成0<br><strong>特征选择</strong></li>
+</ul>
+</li>
+<li><p><strong>L2</strong>：<strong>岭回归</strong>，∥w∥22&#x3D;j∑wj2</p>
+<ul>
+<li><strong>特点：</strong>L2会对大权重施加更多惩罚，因为平方会把大的数放大很多<br>这样模型更倾向于：</li>
+</ul>
+<blockquote>
+<p><strong>把权重分散地放在很多特征上，每个都不要太夸张。</strong></p>
+</blockquote>
+</li>
+</ol>
+<h2 id="多层感知机"><a href="#多层感知机" class="headerlink" title="多层感知机"></a>多层感知机</h2><h3 id="暂退法（deopout）"><a href="#暂退法（deopout）" class="headerlink" title="暂退法（deopout）"></a>暂退法（deopout）</h3><blockquote>
+<p>训练时，随机把一部分神经元输出变成0</p>
+<p>本质上是：不让网络形成过强的固定依赖</p>
+<p>训练时，随机屏蔽一部分神经元，并对留下的神经元做缩放，使整体期望不变。</p>
+<p>公式：$E[h′]&#x3D;h$</p>
+<p><em>h</em>′&#x3D;{0,1−<em>p**h</em>,概率 <em>p</em>概率 1−<em>p</em></p>
+</blockquote>
+<ul>
+<li><p><strong>什么是好的模型</strong></p>
+<blockquote>
+<p>泛化能力好：他在没见过的新数据上也表现好</p>
+</blockquote>
+<ul>
+<li><p>喜欢简单模型</p>
+<blockquote>
+<p>越简单的模型，越不容易过拟合</p>
+</blockquote>
+<ol>
+<li>维度小</li>
+<li>权重小</li>
+<li>函数要平滑（函数不应该对输入的微小变化敏感）<ul>
+<li>如果训练时故意给输入加一点扰动，模型就会被迫学的越稳健</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="参数初始化"><a href="#参数初始化" class="headerlink" title="参数初始化"></a>参数初始化</h3><h4 id="默认初始化"><a href="#默认初始化" class="headerlink" title="默认初始化"></a>默认初始化</h4><h4 id="Xavier初始化"><a href="#Xavier初始化" class="headerlink" title="Xavier初始化"></a>Xavier初始化</h4><p><strong>核心目标</strong>：让信号在前向传播和反向传播时，不要随着层数变深而<strong>越来越大</strong>或<strong>越来越小</strong>。<br>把权重初始化成一个合适范围内的小随机数，这个范围由输入和输出单元数共同决定。</p>
+<h3 id="标签偏移与协变量偏移"><a href="#标签偏移与协变量偏移" class="headerlink" title="标签偏移与协变量偏移"></a>标签偏移与协变量偏移</h3><p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260402122637024.png" alt="image-20260402122637024"></p>
+<h2 id="深度学习计算"><a href="#深度学习计算" class="headerlink" title="深度学习计算"></a>深度学习计算</h2><h3 id="层和块"><a href="#层和块" class="headerlink" title="层和块"></a>层和块</h3><ol>
+<li><strong>层</strong>：神经网络中最基本的计算单元</li>
+<li><strong>块</strong>：块可以由一个层组成，也可以由多个层组合而成</li>
+</ol>
+<h2 id="6-卷积网络"><a href="#6-卷积网络" class="headerlink" title="6 卷积网络"></a>6 卷积网络</h2><h3 id="6-1"><a href="#6-1" class="headerlink" title="6.1"></a>6.1</h3><h4 id="6-1-2-多层感知机的限制"><a href="#6-1-2-多层感知机的限制" class="headerlink" title="6.1.2 多层感知机的限制"></a>6.1.2 多层感知机的限制</h4><p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409190424820.png" alt="image-20260409190424820"><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409190751351.png" alt="image-20260409190751351"></p>
+<h4 id="6-1-3-卷积"><a href="#6-1-3-卷积" class="headerlink" title="6.1.3 卷积"></a>6.1.3 卷积</h4><p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409191058856.png" alt="image-20260409191058856"></p>
+<p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409191107190.png" alt="image-20260409191107190"></p>
+<ul>
+<li><strong>“卷”的意思就是翻转</strong>：为了计算“过去”的输入对“现在”的影响，我们需要把时间轴倒过来。（为甚是-z的原因）</li>
+<li><strong>通道：</strong>如果说图片的<strong>高（H）</strong>和<strong>宽（W）</strong>决定了我们看哪里的“位置”，那么<strong>通道（C）</strong>就决定了我们看什么的“属性”。</li>
+</ul>
+<h3 id="6-2-图像卷积"><a href="#6-2-图像卷积" class="headerlink" title="6.2 图像卷积"></a>6.2 图像卷积</h3><ul>
+<li><strong>感受野：</strong>感受野就是特征图上某个像素点的<strong>“视野范围”</strong></li>
+</ul>
+<h3 id="6-3-填充与步幅"><a href="#6-3-填充与步幅" class="headerlink" title="6.3 填充与步幅"></a>6.3 填充与步幅</h3><h4 id="6-3-1-填充"><a href="#6-3-1-填充" class="headerlink" title="6.3.1 填充"></a>6.3.1 填充</h4><ul>
+<li><p><strong>填充(padding)</strong>:在输入图像的边界填充元素(通常填充元素是0)<img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409202021451.png" alt="image-20260409202021451"></p>
+</li>
+<li><p><strong>卷积核：</strong></p>
+<ul>
+<li>为什么几乎是奇数：<ul>
+<li>对称性</li>
+<li>像素对齐</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409202521123.png" alt="image-20260409202521123"></p>
+<h4 id="6-3-2-步幅"><a href="#6-3-2-步幅" class="headerlink" title="6.3.2 步幅"></a>6.3.2 步幅</h4><blockquote>
+<p>每次移动元素的数量</p>
+</blockquote>
+<p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409203343345.png" alt="image-20260409203343345"></p>
+<p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409203358560.png" alt="image-20260409203358560"></p>
+<h3 id="6-4-多输入输出通道"><a href="#6-4-多输入输出通道" class="headerlink" title="6.4 多输入输出通道"></a>6.4 多输入输出通道</h3><h4 id="6-4-1-多输入通道"><a href="#6-4-1-多输入通道" class="headerlink" title="6.4.1 多输入通道"></a>6.4.1 多输入通道</h4><p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409204603513.png" alt="image-20260409204603513"></p>
+<h4 id="6-4-2-多输出通道"><a href="#6-4-2-多输出通道" class="headerlink" title="6.4.2 多输出通道"></a>6.4.2 多输出通道</h4><p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409205238085.png" alt="image-20260409205238085"></p>
+<h4 id="6-4-3-1-1卷积层"><a href="#6-4-3-1-1卷积层" class="headerlink" title="6.4.3 1*1卷积层"></a>6.4.3 1*1卷积层</h4><blockquote>
+<p>只去改变输入输出的维度，不去改变整个二位的高度和宽度</p>
+</blockquote>
+<ul>
+<li>$K$ 是 $(c_o, c_i, 1, 1)$。</li>
+</ul>
+<h3 id="6-5-汇聚层"><a href="#6-5-汇聚层" class="headerlink" title="6.5 汇聚层"></a>6.5 汇聚层</h3><p>“我们希望逐渐降低隐藏表示的空间分辨率、聚集信息,这样随着我们在神经网络中  层叠的上升,每个神经元对其敏感的感受野(输入)就越大”</p>
+<h4 id="6-5-1-最大汇聚层和平均汇聚层"><a href="#6-5-1-最大汇聚层和平均汇聚层" class="headerlink" title="6.5.1 最大汇聚层和平均汇聚层"></a>6.5.1 最大汇聚层和平均汇聚层</h4><p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409212942437.png" alt="image-20260409212942437"></p>
+<p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260409212954162.png" alt="image-20260409212954162"></p>
+<h4 id="6-5-2-填充与步幅"><a href="#6-5-2-填充与步幅" class="headerlink" title="6.5.2 填充与步幅"></a>6.5.2 填充与步幅</h4><ol>
+<li><strong>池化：</strong>降维，不是抠细节<br>卷积是为了提取特征，会有重叠，精细扫描。<br>但是池化是为了把大图变小，去掉冗余信息，加快计算。</li>
+</ol>
+<ul>
+<li>步幅 &#x3D; 窗口 → <strong>窗口不重叠，无重复计算</strong></li>
+</ul>
+<h3 id="6-6-卷积神经网络（LeNet）"><a href="#6-6-卷积神经网络（LeNet）" class="headerlink" title="6.6 卷积神经网络（LeNet）"></a>6.6 卷积神经网络（LeNet）</h3><h4 id="6-6-1-LeNet"><a href="#6-6-1-LeNet" class="headerlink" title="6.6.1 LeNet"></a>6.6.1 LeNet</h4><ul>
+<li><strong>卷积核</strong></li>
+</ul>
+<p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260410110221833.png" alt="image-20260410110221833"></p>
+<h2 id="7-现代卷积神经网络"><a href="#7-现代卷积神经网络" class="headerlink" title="7 现代卷积神经网络"></a>7 现代卷积神经网络</h2><h3 id="7-1-深度卷积神经网络"><a href="#7-1-深度卷积神经网络" class="headerlink" title="7.1 深度卷积神经网络"></a>7.1 深度卷积神经网络</h3><h4 id="7-1-1-学习表征"><a href="#7-1-1-学习表征" class="headerlink" title="7.1.1 学习表征"></a>7.1.1 学习表征</h4><blockquote>
+<p>让模型自己从数据里学会 “怎么表示、怎么提取有用特征”，而不是人手工去设计特征。</p>
+</blockquote>
+<ol>
+<li><strong>表征：</strong>数据的表达方式</li>
+</ol>
+<h4 id="7-1-2-AlexNet"><a href="#7-1-2-AlexNet" class="headerlink" title="7.1.2 AlexNet"></a>7.1.2 AlexNet</h4><p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260410134240176.png" alt="image-20260410134240176"></p>
+<ul>
+<li><strong>dropout（随即失活）</strong></li>
+</ul>
+<h4 id="7-1-3-读取数据集"><a href="#7-1-3-读取数据集" class="headerlink" title="7.1.3 读取数据集"></a>7.1.3 读取数据集</h4><h3 id="7-2-使用块的网络（vgg）"><a href="#7-2-使用块的网络（vgg）" class="headerlink" title="7.2 使用块的网络（vgg）"></a>7.2 使用块的网络（vgg）</h3><h3 id="7-3-网络中的网络（NIN）"><a href="#7-3-网络中的网络（NIN）" class="headerlink" title="7.3 网络中的网络（NIN）"></a>7.3 网络中的网络（NIN）</h3><h4 id="7-3-1-NIN块"><a href="#7-3-1-NIN块" class="headerlink" title="7.3.1 NIN块"></a>7.3.1 NIN块</h4><p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260410142948911.png" alt="image-20260410142948911"></p>
+<p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260410143040737.png" alt="image-20260410143040737"></p>
+<h4 id="7-3-2-NiN模型"><a href="#7-3-2-NiN模型" class="headerlink" title="7.3.2 NiN模型"></a>7.3.2 NiN模型</h4><p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260410143657204.png" alt="image-20260410143657204"></p>
+<p><img src="C:/Users/联想/AppData/Roaming/Typora/typora-user-images/image-20260410143628813.png" alt="image-20260410143628813"></p>
+<h3 id="7-4-含并行连结的网络（GoogLeNet"><a href="#7-4-含并行连结的网络（GoogLeNet" class="headerlink" title="7.4 含并行连结的网络（GoogLeNet)"></a>7.4 含并行连结的网络（GoogLeNet)</h3><h4 id="7-4-1-Inception块"><a href="#7-4-1-Inception块" class="headerlink" title="7.4.1 Inception块"></a>7.4.1 Inception块</h4><ul>
+<li><strong>池化：</strong>用一个小窗口在图上滑，每个窗口只保留一个代表值。<ul>
+<li>作用：把图变小，去掉细节，保留特征</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>akanepai</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2026/04/10/pytorch%E5%AD%A6%E4%B9%A0/">http://example.com/2026/04/10/pytorch%E5%AD%A6%E4%B9%A0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/pytorch/"># pytorch</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/09/24/%E5%88%B6%E4%BD%9C%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%BF%87%E7%A8%8B/">制作虚拟机过程</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© akanepai | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
